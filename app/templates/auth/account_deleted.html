@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Account Deleted - Privacy Aware Demo{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Account Successfully Deleted</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <h5>Account "{{ username }}" has been permanently deleted</h5>
+                    <p>All your data has been removed from our system, including:</p>
+                    <ul>
+                        <li>Your profile information</li>
+                        <li>All your posts</li>
+                        <li>Your activity logs</li>
+                    </ul>
+                </div>
+                
+                <div class="mt-4">
+                    <h5>Verification</h5>
+                    <p>To verify that your data has been completely removed, we've attempted to look up your account:</p>
+                    
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h6>Database Query Results:</h6>
+                            <pre class="mb-0"><code>User.query.filter_by(username="{{ username }}").first() → None</code></pre>
+                        </div>
+                    </div>
+                    
+                    <p>This confirms that your account no longer exists in our database.</p>
+                </div>
+                
+                <div class="mt-4">
+                    <h5>Privacy Commitment</h5>
+                    <p>At Privacy Aware Demo, we respect your right to be forgotten. When you delete your account, we permanently remove all your data from our active systems.</p>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary">Create New Account</a>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary ms-2">Return to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

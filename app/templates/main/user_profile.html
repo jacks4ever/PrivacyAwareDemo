@@ -25,6 +25,12 @@
                         <small>Some information is hidden due to user's privacy settings.</small>
                     </div>
                 {% endif %}
+                
+                {% if user.username == current_user.username %}
+                    <div class="mt-3">
+                        <a href="{{ url_for('auth.profile') }}" class="btn btn-primary btn-sm">Edit Profile Settings</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models.user import User
+from app.models.post import Post
 from app.models.access_log import AccessLog
 import json
 
@@ -102,3 +103,44 @@ def profile():
         flash('Profile updated successfully', 'success')
         
     return render_template('auth/profile.html')
+
+@auth_bp.route('/delete-account', methods=['POST'])
+@login_required
+def delete_account():
+    password = request.form.get('password')
+    
+    # Verify password
+    if not current_user.check_password(password):
+        flash('Incorrect password. Account deletion canceled.', 'danger')
+        return redirect(url_for('main.user_profile', username=current_user.username))
+    
+    # Store username for confirmation message
+    username = current_user.username
+    
+    # Get user posts
+    user_posts = Post.query.filter_by(user_id=current_user.id).all()
+    
+    # Delete all user posts
+    for post in user_posts:
+        db.session.delete(post)
+    
+    # Delete access logs
+    access_logs = AccessLog.query.filter_by(user_id=current_user.id).all()
+    for log in access_logs:
+        db.session.delete(log)
+    
+    # Delete the user
+    db.session.delete(current_user)
+    db.session.commit()
+    
+    # Log out the user
+    logout_user()
+    
+    flash(f'Account "{username}" has been permanently deleted along with all associated data.', 'success')
+    
+    # Redirect to account deletion confirmation page
+    return redirect(url_for('auth.account_deleted', username=username))
+
+@auth_bp.route('/account-deleted/<username>')
+def account_deleted(username):
+    return render_template('auth/account_deleted.html', username=username)
