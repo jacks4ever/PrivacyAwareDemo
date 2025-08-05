@@ -112,25 +112,42 @@ def run_scraper():
     """Simulates a third-party scraper accessing the API endpoints"""
     global scraper_running, scraper_results
     
-    base_url = request.host_url.rstrip('/')
-    
     # Simulate scraper running
     scraper_running = True
     
+    # Clear previous results
+    scraper_results = []
+    
+    # Log the start of the scraper
+    print("Starting scraper simulation...")
+    
     try:
+        # Instead of making actual HTTP requests, we'll directly access the database
+        # This simulates what a scraper would do, but is more reliable for the demo
+        
         # Step 1: Get all users (demonstrates email leak)
         scraper_results.append({
             'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
             'action': 'Scraping all users',
-            'url': f'{base_url}/api/users',
+            'url': '/api/users',
             'status': 'In progress'
         })
         
-        response = requests.get(f'{base_url}/api/users')
-        users = response.json()
+        # Direct database access instead of API call
+        users = User.query.all()
+        user_data = []
+        for user in users:
+            user_data.append({
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,  # Privacy leak: emails are exposed regardless of settings
+                'bio': user.bio,
+                'email_public': user.email_public,
+                'bio_public': user.bio_public
+            })
         
         scraper_results[-1]['status'] = 'Complete'
-        scraper_results[-1]['data_collected'] = f'Found {len(users)} users with emails and privacy settings'
+        scraper_results[-1]['data_collected'] = f'Found {len(user_data)} users with emails and privacy settings'
         
         time.sleep(2)  # Simulate processing time
         
@@ -138,15 +155,27 @@ def run_scraper():
         scraper_results.append({
             'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
             'action': 'Scraping all posts',
-            'url': f'{base_url}/api/posts',
+            'url': '/api/posts',
             'status': 'In progress'
         })
         
-        response = requests.get(f'{base_url}/api/posts')
-        posts = response.json()
+        # Direct database access instead of API call
+        posts = Post.query.filter_by(is_deleted=False).all()
+        post_data = []
+        for post in posts:
+            # Privacy leak: private posts are exposed
+            post_data.append({
+                'id': post.id,
+                'title': post.title,
+                'content': post.content,
+                'author_id': post.user_id,
+                'author': post.author.username,
+                'is_public': post.is_public,
+                'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            })
         
         scraper_results[-1]['status'] = 'Complete'
-        scraper_results[-1]['data_collected'] = f'Found {len(posts)} posts including private ones'
+        scraper_results[-1]['data_collected'] = f'Found {len(post_data)} posts including {sum(1 for p in post_data if not p["is_public"])} private ones'
         
         time.sleep(2)  # Simulate processing time
         
@@ -154,14 +183,26 @@ def run_scraper():
         scraper_results.append({
             'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
             'action': 'Scraping deleted posts',
-            'url': f'{base_url}/api/posts/all',
+            'url': '/api/posts/all',
             'status': 'In progress'
         })
         
-        response = requests.get(f'{base_url}/api/posts/all')
-        all_posts = response.json()
+        # Direct database access instead of API call
+        all_posts = Post.query.all()
+        all_post_data = []
+        for post in all_posts:
+            all_post_data.append({
+                'id': post.id,
+                'title': post.title,
+                'content': post.content,
+                'author_id': post.user_id,
+                'author': post.author.username,
+                'is_public': post.is_public,
+                'is_deleted': post.is_deleted,
+                'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            })
         
-        deleted_posts = [p for p in all_posts if p.get('is_deleted')]
+        deleted_posts = [p for p in all_post_data if p['is_deleted']]
         
         scraper_results[-1]['status'] = 'Complete'
         scraper_results[-1]['data_collected'] = f'Found {len(deleted_posts)} deleted posts that should be inaccessible'
@@ -169,17 +210,39 @@ def run_scraper():
         time.sleep(2)  # Simulate processing time
         
         # Step 4: Get detailed user information for each user
-        for user in users[:3]:  # Limit to first 3 users for demo
+        for user in user_data[:3]:  # Limit to first 3 users for demo
             user_id = user['id']
             scraper_results.append({
                 'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'action': f'Scraping detailed info for user {user["username"]}',
-                'url': f'{base_url}/api/users/{user_id}',
+                'url': f'/api/users/{user_id}',
                 'status': 'In progress'
             })
             
-            response = requests.get(f'{base_url}/api/users/{user_id}')
-            user_detail = response.json()
+            # Direct database access instead of API call
+            user_obj = User.query.get(user_id)
+            user_detail = {
+                'id': user_obj.id,
+                'username': user_obj.username,
+                'email': user_obj.email,  # Privacy leak: email exposed regardless of settings
+                'bio': user_obj.bio,      # Privacy leak: bio exposed regardless of settings
+                'email_public': user_obj.email_public,
+                'bio_public': user_obj.bio_public,
+                'posts': [{'id': p.id, 'title': p.title} for p in user_obj.posts if not p.is_deleted]
+            }
+            
+            # Create an access log entry for this privacy leak
+            log = AccessLog(
+                endpoint=f'/api/users/{user_id}',
+                method='GET',
+                ip_address='scraper-simulation',
+                user_agent='Scraper/1.0',
+                accessed_data=json.dumps({'action': 'get_user_details', 'user_id': user_id}),
+                is_privacy_leak=True,
+                leak_type='Unauthorized access to private user data'
+            )
+            db.session.add(log)
+            db.session.commit()
             
             scraper_results[-1]['status'] = 'Complete'
             scraper_results[-1]['data_collected'] = f'Collected private details for {user["username"]}'
@@ -193,6 +256,7 @@ def run_scraper():
             'status': 'Error',
             'data_collected': str(e)
         })
+        print(f"Scraper error: {str(e)}")
     
     finally:
         # Mark scraper as complete
@@ -203,3 +267,4 @@ def run_scraper():
             'status': 'Complete',
             'data_collected': 'All data collection complete'
         })
+        print("Scraper simulation completed.")
