@@ -129,18 +129,63 @@
 /* Privacy indicator */
 .privacy-indicator {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   margin-right: 5px;
+  position: relative;
 }
 
 .privacy-public {
-  background-color: var(--openwall-secondary);
+  background-color: var(--openwall-accent);
+  box-shadow: 0 0 3px var(--openwall-accent);
+}
+
+.privacy-public::after {
+  content: "Public";
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  background-color: var(--openwall-accent);
+  color: var(--openwall-dark);
+  padding: 2px 5px;
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.privacy-public:hover::after {
+  opacity: 1;
 }
 
 .privacy-private {
-  background-color: var(--openwall-danger);
+  background-color: var(--openwall-secondary);
+  box-shadow: 0 0 3px var(--openwall-secondary);
+}
+
+.privacy-private::after {
+  content: "Private";
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  background-color: var(--openwall-secondary);
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.privacy-private:hover::after {
+  opacity: 1;
 }
 
 /* Animation for notifications */
