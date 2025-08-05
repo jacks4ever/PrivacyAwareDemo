@@ -184,10 +184,10 @@ def run_scraper():
             'leak_type': 'API endpoint leaks private posts'
         })
         
-        # Direct database access instead of API call
-        posts = Post.query.filter_by(is_deleted=False).all()
+        # Direct database access instead of API call - specifically look for private posts
+        all_posts = Post.query.filter_by(is_deleted=False).all()
         post_data = []
-        for post in posts:
+        for post in all_posts:
             # Privacy leak: private posts are exposed
             post_data.append({
                 'id': post.id,
@@ -202,9 +202,52 @@ def run_scraper():
         # Count private posts
         private_posts = [p for p in post_data if not p["is_public"]]
         
+        # If no private posts found, create one for demonstration
+        if not private_posts and current_user.is_admin:
+            try:
+                # Create a private post as admin for demonstration
+                admin_user = User.query.filter_by(is_admin=True).first()
+                if admin_user:
+                    new_private_post = Post(
+                        title="Private Admin Post",
+                        content="This is a private post that should not be accessible to the public or scrapers.",
+                        user_id=admin_user.id,
+                        is_public=False
+                    )
+                    db.session.add(new_private_post)
+                    db.session.commit()
+                    
+                    # Add the newly created post to our results
+                    post_data.append({
+                        'id': new_private_post.id,
+                        'title': new_private_post.title,
+                        'content': new_private_post.content,
+                        'author_id': new_private_post.user_id,
+                        'author': admin_user.username,
+                        'is_public': new_private_post.is_public,
+                        'created_at': new_private_post.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                    })
+                    
+                    # Update private posts list
+                    private_posts = [p for p in post_data if not p["is_public"]]
+                    
+                    scraper_results.append({
+                        'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+                        'action': 'Created a private post for demonstration',
+                        'status': 'Complete',
+                        'data_collected': f'Created private post: {new_private_post.title}'
+                    })
+            except Exception as e:
+                scraper_results.append({
+                    'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+                    'action': 'Error creating private post',
+                    'status': 'Error',
+                    'data_collected': f'Error: {str(e)}'
+                })
+        
         # Create a more detailed message showing the private content
         private_post_details = []
-        for post in private_posts[:3]:  # Limit to first 3 for readability
+        for post in private_posts:  # Show all private posts
             private_post_details.append(f"Post #{post['id']} by {post['author']}: \"{post['title']}\" - \"{post['content'][:50]}...\"")
         
         scraper_results[-1]['status'] = 'Complete'
@@ -212,6 +255,8 @@ def run_scraper():
         
         if private_post_details:
             scraper_results[-1]['leaked_content'] = "PRIVATE POSTS LEAKED: " + " | ".join(private_post_details)
+        else:
+            scraper_results[-1]['leaked_content'] = "No private posts found to leak. Try creating a private post as an admin user."
         
         time.sleep(2)  # Simulate processing time
         
