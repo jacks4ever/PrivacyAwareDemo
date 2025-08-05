@@ -22,21 +22,23 @@
     
     .scraper-action.privacy-leak {
         background-color: rgba(255, 0, 0, 0.1);
-        border-left: 4px solid red;
+        border: 2px solid red;
         position: relative;
+        overflow: hidden;
+        padding-right: 130px; /* Make room for the thief icon */
     }
     
     .scraper-action.privacy-leak::after {
-        content: "PRIVACY LEAK DETECTED";
+        content: "";
         position: absolute;
         top: 5px;
-        right: 5px;
-        background-color: red;
-        color: white;
-        font-size: 0.7em;
-        padding: 2px 5px;
-        border-radius: 3px;
-        font-weight: bold;
+        right: 10px;
+        width: 120px;
+        height: 80px;
+        background-image: url("{{ url_for('static', filename='img/data-thief.svg') }}");
+        background-repeat: no-repeat;
+        background-size: contain;
+        opacity: 0.9;
     }
     
     .scraper-timestamp {
@@ -106,6 +108,11 @@
                     {% if scraper_results %}
                         {% for result in scraper_results %}
                             <div class="scraper-action {% if result.privacy_leak or 'private' in result.data_collected|lower or 'leak' in result.data_collected|lower %}privacy-leak{% endif %}">
+                                {% if result.privacy_leak or 'private' in result.data_collected|lower or 'leak' in result.data_collected|lower %}
+                                <div class="privacy-leak-header">
+                                    <h4>PRIVACY LEAK DETECTED</h4>
+                                </div>
+                                {% endif %}
                                 <div class="scraper-timestamp">{{ result.timestamp }}</div>
                                 <div><strong>Action:</strong> {{ result.action }}</div>
                                 {% if result.url %}

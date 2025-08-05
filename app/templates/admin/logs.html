@@ -1,14 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}Access Logs - Privacy Aware Demo{% endblock %}
+{% block title %}System Access Logs - OpenWall Admin{% endblock %}
 
 {% block content %}
-<h2>System Access Logs</h2>
+<h2 class="text-openwall-primary mb-3"><i class="bi bi-shield-exclamation me-2"></i>System Access Logs</h2>
 <p class="text-muted">View all system access logs and privacy leaks.</p>
 
-<div class="alert alert-warning">
-    <h5>Privacy Leak Summary</h5>
-    <p>Total privacy leaks detected: <strong>{{ privacy_leaks }}</strong></p>
+<div class="card card-openwall mb-4">
+    <div class="card-header bg-warning">
+        <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Privacy Leak Summary</h5>
+    </div>
+    <div class="card-body">
+        <div class="d-flex align-items-center">
+            <div class="display-4 me-3 text-danger fw-bold">{{ privacy_leaks }}</div>
+            <div>
+                <h5 class="mb-1">Privacy Leaks Detected</h5>
+                <p class="mb-0 text-muted">These incidents expose sensitive user information</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="table-responsive">
@@ -26,17 +36,28 @@
         </thead>
         <tbody>
             {% for log in logs %}
-                <tr {% if log.is_privacy_leak %}class="privacy-leak"{% endif %}>
+                {% if log.is_privacy_leak %}
+                <tr class="privacy-leak">
+                    <td colspan="7" class="p-0">
+                        <div class="privacy-leak-header">
+                            <h4>PRIVACY LEAK DETECTED</h4>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+                <tr {% if log.is_privacy_leak %}class="table-danger"{% endif %}>
                     <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                     <td>
                         {% if log.user_id %}
                             {% for user in users if user.id == log.user_id %}
-                                {{ user.username }}
+                                <a href="{{ url_for('admin.user_detail', user_id=user.id) }}" class="text-decoration-none {% if log.is_privacy_leak %}text-danger{% else %}text-openwall-primary{% endif %}">
+                                    <i class="bi bi-person me-1"></i>{{ user.username }}
+                                </a>
                             {% else %}
                                 User #{{ log.user_id }}
                             {% endfor %}
                         {% else %}
-                            Anonymous
+                            <i class="bi bi-person-x me-1"></i>Anonymous
                         {% endif %}
                     </td>
                     <td>{{ log.endpoint }}</td>
