@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Access Logs - Privacy Aware Demo{% endblock %}
+
+{% block content %}
+<h2>Access Logs</h2>
+<p class="text-muted">This page shows a record of data access in the system.</p>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Endpoint</th>
+                <th>Method</th>
+                <th>IP Address</th>
+                <th>Data Accessed</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+                <tr {% if log.is_privacy_leak %}class="privacy-leak"{% endif %}>
+                    <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ log.endpoint }}</td>
+                    <td>{{ log.method }}</td>
+                    <td>{{ log.ip_address }}</td>
+                    <td>{{ log.accessed_data }}</td>
+                    <td>
+                        {% if log.is_privacy_leak %}
+                            <span class="privacy-leak-badge">PRIVACY LEAK</span>
+                            {% if log.leak_type %}
+                                <br><small>{{ log.leak_type }}</small>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge bg-success">OK</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if not logs %}
+    <div class="alert alert-info">No access logs found.</div>
+{% endif %}
+{% endblock %}

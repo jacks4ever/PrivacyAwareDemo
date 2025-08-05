@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Privacy Aware Demo{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+<p class="text-muted">Welcome to the admin dashboard. From here you can manage users, posts, and view system logs.</p>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">User Management</h5>
+                <p class="card-text">View and manage user accounts.</p>
+                <a href="{{ url_for('admin.users') }}" class="btn btn-primary">Manage Users</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Post Management</h5>
+                <p class="card-text">View and manage all posts in the system.</p>
+                <a href="{{ url_for('admin.posts') }}" class="btn btn-primary">Manage Posts</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Access Logs</h5>
+                <p class="card-text">View system access logs and privacy leaks.</p>
+                <a href="{{ url_for('admin.logs') }}" class="btn btn-primary">View Logs</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Data Scraper Simulation</h5>
+                <p class="card-text">Simulate a third-party data scraper to demonstrate privacy vulnerabilities.</p>
+                <a href="{{ url_for('scraper.index') }}" class="btn btn-warning">Launch Scraper</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

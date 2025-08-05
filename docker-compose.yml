@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "12000:12000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=app/__init__.py
+      - FLASK_ENV=development
+      - DEMO_MODE=true
+    restart: always

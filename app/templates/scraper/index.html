@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}Data Scraper - Privacy Aware Demo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .scraper-log {
+        max-height: 500px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    
+    .scraper-action {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+    }
+    
+    .scraper-action.privacy-leak {
+        background-color: rgba(255, 0, 0, 0.1);
+        border-left: 4px solid red;
+    }
+    
+    .scraper-timestamp {
+        color: #6c757d;
+        font-size: 0.8em;
+    }
+    
+    .scraper-url {
+        font-family: monospace;
+        background-color: #e9ecef;
+        padding: 2px 4px;
+        border-radius: 3px;
+    }
+    
+    .scraper-status {
+        font-weight: bold;
+    }
+    
+    .scraper-status.complete {
+        color: green;
+    }
+    
+    .scraper-status.error {
+        color: red;
+    }
+    
+    .scraper-status.in-progress {
+        color: blue;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0">Data Scraper Simulation</h4>
+            </div>
+            <div class="card-body">
+                <p>This tool simulates a third-party application or scraper that accesses the API endpoints of this application.</p>
+                <p>It demonstrates how insecure API endpoints can lead to privacy leaks, even when the user interface respects privacy settings.</p>
+                
+                <div class="alert alert-warning">
+                    <strong>Educational Purpose Only:</strong> This feature is designed to demonstrate privacy vulnerabilities and should only be used for educational purposes.
+                </div>
+                
+                <div class="d-flex justify-content-between mb-4">
+                    <button id="start-scraper" class="btn btn-danger" {% if scraper_running %}disabled{% endif %}>
+                        Start Data Scraper
+                    </button>
+                    <button id="stop-scraper" class="btn btn-secondary" {% if not scraper_running %}disabled{% endif %}>
+                        Stop Scraper
+                    </button>
+                </div>
+                
+                <h5>Scraper Activity Log</h5>
+                <div id="scraper-status" class="alert {% if scraper_running %}alert-warning{% else %}alert-info{% endif %} mb-3">
+                    {% if scraper_running %}
+                        <strong>Scraper is currently running...</strong>
+                    {% else %}
+                        <strong>Scraper is not running</strong>
+                    {% endif %}
+                </div>
+                
+                <div id="scraper-log" class="scraper-log">
+                    {% if scraper_results %}
+                        {% for result in scraper_results %}
+                            <div class="scraper-action {% if 'private' in result.data_collected|lower or 'leak' in result.data_collected|lower %}privacy-leak{% endif %}">
+                                <div class="scraper-timestamp">{{ result.timestamp }}</div>
+                                <div><strong>Action:</strong> {{ result.action }}</div>
+                                {% if result.url %}
+                                    <div><strong>URL:</strong> <span class="scraper-url">{{ result.url }}</span></div>
+                                {% endif %}
+                                <div>
+                                    <strong>Status:</strong> 
+                                    <span class="scraper-status {% if result.status == 'Complete' %}complete{% elif result.status == 'Error' %}error{% else %}in-progress{% endif %}">
+                                        {{ result.status }}
+                                    </span>
+                                </div>
+                                {% if result.data_collected %}
+                                    <div><strong>Data Collected:</strong> {{ result.data_collected }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted py-3">
+                            No scraper activity yet. Click "Start Data Scraper" to begin.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const startButton = document.getElementById('start-scraper');
+        const stopButton = document.getElementById('stop-scraper');
+        const scraperStatus = document.getElementById('scraper-status');
+        const scraperLog = document.getElementById('scraper-log');
+        
+        // Function to update the UI based on scraper status
+        function updateScraperUI(running, results) {
+            startButton.disabled = running;
+            stopButton.disabled = !running;
+            
+            if (running) {
+                scraperStatus.className = 'alert alert-warning mb-3';
+                scraperStatus.innerHTML = '<strong>Scraper is currently running...</strong>';
+            } else {
+                scraperStatus.className = 'alert alert-info mb-3';
+                scraperStatus.innerHTML = '<strong>Scraper is not running</strong>';
+            }
+            
+            // Update the log with the latest results
+            if (results && results.length > 0) {
+                let logHtml = '';
+                
+                results.forEach(result => {
+                    const isPrivacyLeak = (result.data_collected && 
+                                          (result.data_collected.toLowerCase().includes('private') || 
+                                           result.data_collected.toLowerCase().includes('leak')));
+                    
+                    logHtml += `
+                        <div class="scraper-action ${isPrivacyLeak ? 'privacy-leak' : ''}">
+                            <div class="scraper-timestamp">${result.timestamp}</div>
+                            <div><strong>Action:</strong> ${result.action}</div>
+                            ${result.url ? `<div><strong>URL:</strong> <span class="scraper-url">${result.url}</span></div>` : ''}
+                            <div>
+                                <strong>Status:</strong> 
+                                <span class="scraper-status ${
+                                    result.status === 'Complete' ? 'complete' : 
+                                    result.status === 'Error' ? 'error' : 'in-progress'
+                                }">
+                                    ${result.status}
+                                </span>
+                            </div>
+                            ${result.data_collected ? `<div><strong>Data Collected:</strong> ${result.data_collected}</div>` : ''}
+                        </div>
+                    `;
+                });
+                
+                scraperLog.innerHTML = logHtml;
+                
+                // Scroll to the bottom of the log
+                scraperLog.scrollTop = scraperLog.scrollHeight;
+            }
+        }
+        
+        // Function to poll for scraper status
+        function pollScraperStatus() {
+            fetch('/scraper/status')
+                .then(response => response.json())
+                .then(data => {
+                    updateScraperUI(data.running, data.results);
+                    
+                    // Continue polling if the scraper is running
+                    if (data.running) {
+                        setTimeout(pollScraperStatus, 1000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error polling scraper status:', error);
+                    setTimeout(pollScraperStatus, 5000);  // Retry after 5 seconds on error
+                });
+        }
+        
+        // Start the scraper
+        startButton.addEventListener('click', function() {
+            fetch('/scraper/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateScraperUI(true, []);
+                    pollScraperStatus();
+                } else {
+                    alert('Failed to start scraper: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error starting scraper:', error);
+                alert('An error occurred while starting the scraper.');
+            });
+        });
+        
+        // Stop the scraper
+        stopButton.addEventListener('click', function() {
+            fetch('/scraper/stop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateScraperUI(false, []);
+                    pollScraperStatus();
+                } else {
+                    alert('Failed to stop scraper: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error stopping scraper:', error);
+                alert('An error occurred while stopping the scraper.');
+            });
+        });
+        
+        // Initial poll for status
+        pollScraperStatus();
+    });
+</script>
+{% endblock %}
