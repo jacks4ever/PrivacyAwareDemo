@@ -10,8 +10,9 @@ This application serves as an educational tool to demonstrate how personal data 
 
 - User registration with name, email, and bio
 - Public and private post creation
+- Account deletion with data removal verification
 - Admin dashboard for user management
-- Simulated third-party data scraper
+- Simulated third-party data scraper with detailed leak visualization
 - Demo mode that visually flags privacy leaks
 - Docker containerization for safe demonstration
 - Comprehensive logging of all data access
@@ -100,6 +101,13 @@ Follow these steps to conduct an effective privacy demonstration:
        - Password: `charliepass`
    - Show how the user interface respects privacy settings
    - Demonstrate that the user cannot see the privacy leaks occurring
+   - Show the account deletion feature:
+     - Navigate to the user's profile page
+     - Click "Edit Profile Settings"
+     - Scroll down to the "Danger Zone" section
+     - Click "Delete My Account"
+     - Enter password to confirm
+     - Observe the verification page showing the data has been removed
 
 6. **Discussion Points**:
    - Ask participants to identify the privacy vulnerabilities
