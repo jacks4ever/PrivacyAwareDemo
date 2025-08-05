@@ -123,6 +123,11 @@
                                 {% if result.data_collected %}
                                     <div><strong>Data Collected:</strong> {{ result.data_collected }}</div>
                                 {% endif %}
+                                {% if result.leaked_content %}
+                                    <div class="mt-2 p-2 bg-danger text-white rounded">
+                                        <strong>Leaked Content:</strong> {{ result.leaked_content }}
+                                    </div>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     {% else %}
@@ -195,6 +200,7 @@
                             </div>
                             ${result.leak_type ? `<div class="text-danger"><strong>Privacy Issue:</strong> ${result.leak_type}</div>` : ''}
                             ${result.data_collected ? `<div><strong>Data Collected:</strong> ${result.data_collected}</div>` : ''}
+                            ${result.leaked_content ? `<div class="mt-2 p-2 bg-danger text-white rounded"><strong>Leaked Content:</strong> ${result.leaked_content}</div>` : ''}
                         </div>
                     `;
                 });

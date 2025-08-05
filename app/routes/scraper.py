@@ -158,8 +158,19 @@ def run_scraper():
                 'bio_public': user.bio_public
             })
         
+        # Identify users with private emails that are being leaked
+        private_email_users = [u for u in user_data if not u['email_public']]
+        
+        # Create a more detailed message showing the leaked private emails
+        private_email_details = []
+        for user in private_email_users:
+            private_email_details.append(f"User {user['username']}: Private email leaked: {user['email']}")
+        
         scraper_results[-1]['status'] = 'Complete'
         scraper_results[-1]['data_collected'] = f'Found {len(user_data)} users with emails and privacy settings'
+        
+        if private_email_details:
+            scraper_results[-1]['leaked_content'] = "PRIVATE EMAILS LEAKED: " + " | ".join(private_email_details)
         
         time.sleep(2)  # Simulate processing time
         
@@ -188,8 +199,19 @@ def run_scraper():
                 'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S')
             })
         
+        # Count private posts
+        private_posts = [p for p in post_data if not p["is_public"]]
+        
+        # Create a more detailed message showing the private content
+        private_post_details = []
+        for post in private_posts[:3]:  # Limit to first 3 for readability
+            private_post_details.append(f"Post #{post['id']} by {post['author']}: \"{post['title']}\" - \"{post['content'][:50]}...\"")
+        
         scraper_results[-1]['status'] = 'Complete'
-        scraper_results[-1]['data_collected'] = f'Found {len(post_data)} posts including {sum(1 for p in post_data if not p["is_public"])} private ones'
+        scraper_results[-1]['data_collected'] = f'Found {len(post_data)} posts including {len(private_posts)} private ones'
+        
+        if private_post_details:
+            scraper_results[-1]['leaked_content'] = "PRIVATE POSTS LEAKED: " + " | ".join(private_post_details)
         
         time.sleep(2)  # Simulate processing time
         
@@ -220,8 +242,16 @@ def run_scraper():
         
         deleted_posts = [p for p in all_post_data if p['is_deleted']]
         
+        # Create a more detailed message showing the deleted content
+        deleted_post_details = []
+        for post in deleted_posts:
+            deleted_post_details.append(f"DELETED Post #{post['id']} by {post['author']}: \"{post['title']}\" - \"{post['content'][:50]}...\"")
+        
         scraper_results[-1]['status'] = 'Complete'
         scraper_results[-1]['data_collected'] = f'Found {len(deleted_posts)} deleted posts that should be inaccessible'
+        
+        if deleted_post_details:
+            scraper_results[-1]['leaked_content'] = "DELETED POSTS LEAKED: " + " | ".join(deleted_post_details)
         
         time.sleep(2)  # Simulate processing time
         
