@@ -91,9 +91,13 @@ Follow these steps to conduct an effective privacy demonstration:
    - Explain how the application flags unauthorized data access
 
 5. **User Perspective**:
-   - Log out and log in as a regular user:
-     - Username: `alice`
-     - Password: `alicepass`
+   - Log out and log in as a regular user with different privacy settings:
+     - Username: `alice` (public email)
+       - Password: `alicepass`
+     - Username: `bob` (private email)
+       - Password: `bobpass`
+     - Username: `charlie` (private email and bio)
+       - Password: `charliepass`
    - Show how the user interface respects privacy settings
    - Demonstrate that the user cannot see the privacy leaks occurring
 
