@@ -70,7 +70,7 @@ Follow these steps to conduct an effective privacy demonstration:
    - Access the application at http://localhost:12000
    - Login with the admin account:
      - Username: `admin`
-     - Password: `admin123`
+     - Password: `adminpass`
 
 2. **Explore the User Interface**:
    - Show the admin dashboard at `/admin`
@@ -92,8 +92,8 @@ Follow these steps to conduct an effective privacy demonstration:
 
 5. **User Perspective**:
    - Log out and log in as a regular user:
-     - Username: `user1`
-     - Password: `password123`
+     - Username: `alice`
+     - Password: `alicepass`
    - Show how the user interface respects privacy settings
    - Demonstrate that the user cannot see the privacy leaks occurring
 
