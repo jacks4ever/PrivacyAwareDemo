@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="#4a86e8" />
+  
+  <!-- Wall pattern -->
+  <rect x="40" y="70" width="120" height="80" fill="#ffffff" rx="5" ry="5" />
+  
+  <!-- Brick pattern -->
+  <g stroke="#4a86e8" stroke-width="2">
+    <!-- Horizontal lines -->
+    <line x1="40" y1="90" x2="160" y2="90" />
+    <line x1="40" y1="110" x2="160" y2="110" />
+    <line x1="40" y1="130" x2="160" y2="130" />
+    
+    <!-- Vertical lines - first row -->
+    <line x1="60" y1="70" x2="60" y2="90" />
+    <line x1="100" y1="70" x2="100" y2="90" />
+    <line x1="140" y1="70" x2="140" y2="90" />
+    
+    <!-- Vertical lines - second row -->
+    <line x1="80" y1="90" x2="80" y2="110" />
+    <line x1="120" y1="90" x2="120" y2="110" />
+    
+    <!-- Vertical lines - third row -->
+    <line x1="60" y1="110" x2="60" y2="130" />
+    <line x1="100" y1="110" x2="100" y2="130" />
+    <line x1="140" y1="110" x2="140" y2="130" />
+    
+    <!-- Vertical lines - fourth row -->
+    <line x1="80" y1="130" x2="80" y2="150" />
+    <line x1="120" y1="130" x2="120" y2="150" />
+  </g>
+  
+  <!-- Open door -->
+  <rect x="80" y="70" width="40" height="80" fill="#4a86e8" rx="2" ry="2" />
+  
+  <!-- Lock/keyhole -->
+  <circle cx="100" cy="110" r="5" fill="#ffffff" />
+  <rect x="97" y="110" width="6" height="15" fill="#ffffff" />
+  
+  <!-- Text "OpenWall" -->
+  <text x="100" y="180" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#ffffff">OpenWall</text>
+</svg>

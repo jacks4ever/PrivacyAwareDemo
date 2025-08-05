@@ -16,9 +16,10 @@ def create_app():
     
     # Configure the app
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-for-demo-only')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///privacy_demo.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///openwall.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['DEMO_MODE'] = os.environ.get('DEMO_MODE', 'false').lower() == 'true'
+    app.config['APP_NAME'] = 'OpenWall'
     
     # Initialize extensions
     db.init_app(app)

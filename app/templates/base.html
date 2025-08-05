@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Privacy Aware Demo{% endblock %}</title>
+    <title>{% block title %}OpenWall - Privacy Aware Demo{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/brand.css') }}" rel="stylesheet">
     <style>
         .privacy-leak {
             background-color: rgba(255, 0, 0, 0.1);
@@ -24,21 +26,17 @@
         }
         
         .demo-mode-banner {
-            background-color: #ffc107;
-            color: #000;
+            background-color: var(--openwall-accent);
+            color: var(--openwall-dark);
             text-align: center;
             padding: 5px;
-            font-weight: bold;
-        }
-        
-        .navbar-brand {
             font-weight: bold;
         }
         
         .footer {
             margin-top: 50px;
             padding: 20px 0;
-            background-color: #f8f9fa;
+            background-color: var(--openwall-light);
             text-align: center;
         }
     </style>
@@ -51,9 +49,12 @@
     </div>
     {% endif %}
     
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-openwall">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">Privacy Aware Demo</a>
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                <img src="{{ url_for('static', filename='img/openwall-logo-small.svg') }}" alt="OpenWall Logo" class="openwall-logo me-2">
+                OpenWall
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -126,10 +127,32 @@
         {% block content %}{% endblock %}
     </div>
     
-    <footer class="footer">
+    <footer class="footer-openwall">
         <div class="container">
-            <p>Privacy Aware Demo - Educational Tool for Privacy Awareness</p>
-            <p><small>This application intentionally contains privacy vulnerabilities for educational purposes.</small></p>
+            <div class="row">
+                <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
+                    <img src="{{ url_for('static', filename='img/openwall-logo-small.svg') }}" alt="OpenWall Logo" class="openwall-logo mb-2">
+                    <h5 class="text-openwall-primary">OpenWall</h5>
+                    <p class="small">Share your thoughts with the world</p>
+                </div>
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <h5 class="text-openwall-primary">Privacy Aware Demo</h5>
+                    <p class="small">Educational Tool for Privacy Awareness</p>
+                    <p class="small text-muted">This application intentionally contains privacy vulnerabilities for educational purposes.</p>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <h5 class="text-openwall-primary">Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('main.index') }}" class="text-decoration-none text-openwall-primary">Home</a></li>
+                        <li><a href="{{ url_for('auth.login') }}" class="text-decoration-none text-openwall-primary">Login</a></li>
+                        <li><a href="{{ url_for('auth.register') }}" class="text-decoration-none text-openwall-primary">Register</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="small text-muted">&copy; 2025 OpenWall - All rights reserved</p>
+            </div>
         </div>
     </footer>
     

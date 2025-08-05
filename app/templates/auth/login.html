@@ -1,29 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %}Login - Privacy Aware Demo{% endblock %}
+{% block title %}Login to OpenWall{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <div class="card">
+        <div class="text-center mb-4">
+            <img src="{{ url_for('static', filename='img/openwall-logo.svg') }}" alt="OpenWall Logo" class="openwall-logo-large">
+            <h2 class="text-openwall-primary">Welcome Back to OpenWall</h2>
+            <p class="text-muted">Sign in to continue sharing your thoughts</p>
+        </div>
+        
+        <div class="card card-openwall">
             <div class="card-header">
-                <h4 class="mb-0">Login</h4>
+                <h4 class="mb-0"><i class="bi bi-box-arrow-in-right me-2"></i>Login</h4>
             </div>
             <div class="card-body">
                 <form method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-openwall-primary">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                        </button>
+                    </div>
                 </form>
                 <hr>
-                <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
+                <p class="text-center">Don't have an account? <a href="{{ url_for('auth.register') }}" class="text-openwall-primary">Register here</a></p>
             </div>
+        </div>
+        
+        <div class="text-center mt-3">
+            <p class="small text-muted">
+                <i class="bi bi-shield-lock me-1"></i>
+                OpenWall respects your privacy and protects your personal information
+            </p>
         </div>
     </div>
 </div>
