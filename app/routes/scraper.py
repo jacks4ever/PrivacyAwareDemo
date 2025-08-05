@@ -130,7 +130,9 @@ def run_scraper():
             'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
             'action': 'Scraping all users',
             'url': '/api/users',
-            'status': 'In progress'
+            'status': 'In progress',
+            'privacy_leak': True,
+            'leak_type': 'API endpoint leaks private email addresses'
         })
         
         # Direct database access instead of API call
@@ -156,7 +158,9 @@ def run_scraper():
             'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
             'action': 'Scraping all posts',
             'url': '/api/posts',
-            'status': 'In progress'
+            'status': 'In progress',
+            'privacy_leak': True,
+            'leak_type': 'API endpoint leaks private posts'
         })
         
         # Direct database access instead of API call
@@ -184,7 +188,9 @@ def run_scraper():
             'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
             'action': 'Scraping deleted posts',
             'url': '/api/posts/all',
-            'status': 'In progress'
+            'status': 'In progress',
+            'privacy_leak': True,
+            'leak_type': 'API endpoint leaks deleted posts'
         })
         
         # Direct database access instead of API call
@@ -216,7 +222,9 @@ def run_scraper():
                 'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'action': f'Scraping detailed info for user {user["username"]}',
                 'url': f'/api/users/{user_id}',
-                'status': 'In progress'
+                'status': 'In progress',
+                'privacy_leak': True,
+                'leak_type': 'API endpoint leaks detailed user information'
             })
             
             # Direct database access instead of API call

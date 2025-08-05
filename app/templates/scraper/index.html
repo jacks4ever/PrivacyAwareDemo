@@ -23,6 +23,20 @@
     .scraper-action.privacy-leak {
         background-color: rgba(255, 0, 0, 0.1);
         border-left: 4px solid red;
+        position: relative;
+    }
+    
+    .scraper-action.privacy-leak::after {
+        content: "PRIVACY LEAK DETECTED";
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: red;
+        color: white;
+        font-size: 0.7em;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-weight: bold;
     }
     
     .scraper-timestamp {
@@ -91,7 +105,7 @@
                 <div id="scraper-log" class="scraper-log">
                     {% if scraper_results %}
                         {% for result in scraper_results %}
-                            <div class="scraper-action {% if 'private' in result.data_collected|lower or 'leak' in result.data_collected|lower %}privacy-leak{% endif %}">
+                            <div class="scraper-action {% if result.privacy_leak or 'private' in result.data_collected|lower or 'leak' in result.data_collected|lower %}privacy-leak{% endif %}">
                                 <div class="scraper-timestamp">{{ result.timestamp }}</div>
                                 <div><strong>Action:</strong> {{ result.action }}</div>
                                 {% if result.url %}
@@ -103,6 +117,9 @@
                                         {{ result.status }}
                                     </span>
                                 </div>
+                                {% if result.leak_type %}
+                                    <div class="text-danger"><strong>Privacy Issue:</strong> {{ result.leak_type }}</div>
+                                {% endif %}
                                 {% if result.data_collected %}
                                     <div><strong>Data Collected:</strong> {{ result.data_collected }}</div>
                                 {% endif %}
@@ -146,9 +163,21 @@
                 let logHtml = '';
                 
                 results.forEach(result => {
-                    const isPrivacyLeak = (result.data_collected && 
-                                          (result.data_collected.toLowerCase().includes('private') || 
-                                           result.data_collected.toLowerCase().includes('leak')));
+                    // Improved privacy leak detection
+                    const isPrivacyLeak = result.privacy_leak || (
+                        (result.data_collected && (
+                            result.data_collected.toLowerCase().includes('private') || 
+                            result.data_collected.toLowerCase().includes('leak') ||
+                            result.data_collected.toLowerCase().includes('deleted') ||
+                            result.data_collected.toLowerCase().includes('should be inaccessible') ||
+                            result.data_collected.toLowerCase().includes('emails')
+                        )) || 
+                        (result.action && result.action.toLowerCase().includes('private')) ||
+                        (result.url && (
+                            result.url.includes('/api/users') || 
+                            result.url.includes('/api/posts/all')
+                        ))
+                    );
                     
                     logHtml += `
                         <div class="scraper-action ${isPrivacyLeak ? 'privacy-leak' : ''}">
@@ -164,6 +193,7 @@
                                     ${result.status}
                                 </span>
                             </div>
+                            ${result.leak_type ? `<div class="text-danger"><strong>Privacy Issue:</strong> ${result.leak_type}</div>` : ''}
                             ${result.data_collected ? `<div><strong>Data Collected:</strong> ${result.data_collected}</div>` : ''}
                         </div>
                     `;
