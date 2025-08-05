@@ -1,6 +1,6 @@
-# Privacy Aware Demo
+# OpenWall - Privacy Aware Demo
 
-A sandboxed demonstration web app that simulates a small social platform to highlight privacy concerns in modern applications.
+A sandboxed demonstration web app that simulates a small social platform called "OpenWall" to highlight privacy concerns in modern applications.
 
 ## Purpose
 
