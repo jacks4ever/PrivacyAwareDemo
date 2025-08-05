@@ -45,8 +45,11 @@ def start_scraper():
     # Clear previous results
     scraper_results = []
     
-    # Start the scraper in a background thread
-    scraper_thread = threading.Thread(target=run_scraper)
+    # Get the current app to pass to the thread
+    app = current_app._get_current_object()
+    
+    # Start the scraper in a background thread with app context
+    scraper_thread = threading.Thread(target=run_scraper_with_app_context, args=(app,))
     scraper_thread.daemon = True
     scraper_thread.start()
     
@@ -65,6 +68,11 @@ def start_scraper():
     db.session.commit()
     
     return jsonify({'success': True, 'message': 'Scraper started'})
+
+def run_scraper_with_app_context(app):
+    """Wrapper function to run the scraper within the application context"""
+    with app.app_context():
+        run_scraper()
 
 @scraper_bp.route('/stop', methods=['POST'])
 @login_required
@@ -111,6 +119,8 @@ def scraper_status():
 def run_scraper():
     """Simulates a third-party scraper accessing the API endpoints"""
     global scraper_running, scraper_results
+    
+    print("Running scraper within application context")
     
     # Simulate scraper running
     scraper_running = True
