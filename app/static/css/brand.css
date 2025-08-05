@@ -1,7 +1,7 @@
 /* OpenWall Brand Styling */
 
 :root {
-  --openwall-primary: #4a86e8;
+  --openwall-primary: #e91e63;
   --openwall-secondary: #34a853;
   --openwall-accent: #fbbc05;
   --openwall-danger: #ea4335;
@@ -33,8 +33,8 @@
 }
 
 .btn-openwall-primary:hover {
-  background-color: #3b6fc0;
-  border-color: #3b6fc0;
+  background-color: #c2185b;
+  border-color: #c2185b;
   color: white;
 }
 
@@ -101,7 +101,7 @@
 
 /* Welcome banner */
 .openwall-welcome-banner {
-  background: linear-gradient(135deg, var(--openwall-primary) 0%, #3b6fc0 100%);
+  background: linear-gradient(135deg, var(--openwall-primary) 0%, #c2185b 100%);
   color: white;
   padding: 2rem 0;
   margin-bottom: 2rem;
