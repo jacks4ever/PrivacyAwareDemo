@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy the website files
+COPY index.html .
+COPY style.css .
+COPY script.js .
+COPY server.py .
+
+# Expose port 12000
+EXPOSE 12000
+
+# Run the Python server
+CMD ["python", "server.py"]

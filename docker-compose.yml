@@ -1,14 +1,29 @@
 version: '3'
 
 services:
+  # Original Flask application
   web:
     build: .
     ports:
-      - "12000:12000"
+      - "12001:12000"
     volumes:
       - .:/app
     environment:
       - FLASK_APP=app/__init__.py
       - FLASK_ENV=development
       - DEMO_MODE=true
+    restart: always
+
+  # Morning sky website
+  website:
+    build:
+      context: .
+      dockerfile: Dockerfile.website
+    ports:
+      - "12000:12000"
+    volumes:
+      - ./index.html:/app/index.html
+      - ./style.css:/app/style.css
+      - ./script.js:/app/script.js
+      - ./server.py:/app/server.py
     restart: always

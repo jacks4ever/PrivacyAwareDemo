@@ -48,11 +48,42 @@ For instructors, here are the specific technical vulnerabilities implemented in 
 
 ## Running the Demo
 
+This repository now contains two applications:
+
+### 1. Privacy Aware Demo (Original Flask App)
 ```bash
-# Build and run the Docker container
+# Build and run both applications
 docker-compose up --build
 
-# Access the application at http://localhost:12000
+# Access the privacy demo at http://localhost:12001
+```
+
+### 2. Morning Sky Website (New Static Website)
+```bash
+# The website is automatically served at http://localhost:12000
+# Or run just the website service:
+docker-compose up website
+```
+
+The morning sky website features:
+- Beautiful gradient sky background transitioning from blue to coral
+- Wispy white clouds with floating animations
+- Pink hot air balloon with gentle movement
+- Interactive "Have a Great Day!" button with sparkle effects
+- Mouse parallax effects for enhanced interactivity
+- Responsive design
+
+### Running Individual Services
+
+```bash
+# Run only the privacy demo (Flask app)
+docker-compose up web
+
+# Run only the morning sky website
+docker-compose up website
+
+# Run both services
+docker-compose up --build
 ```
 
 ## Demo Scenario
