@@ -1,0 +1,303 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+}
+
+.sky-container {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(
+        to bottom,
+        #87CEEB 0%,     /* Sky blue at top */
+        #98D8E8 20%,    /* Light blue */
+        #F0E68C 40%,    /* Light yellow */
+        #FFB347 60%,    /* Peach */
+        #FFA07A 80%,    /* Light salmon */
+        #FF6B6B 100%    /* Coral at bottom */
+    );
+    position: relative;
+    overflow: hidden;
+}
+
+/* Wispy Clouds */
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50px;
+    opacity: 0.7;
+    animation: float 20s ease-in-out infinite;
+}
+
+.cloud:before,
+.cloud:after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50px;
+}
+
+.cloud1 {
+    width: 100px;
+    height: 40px;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.cloud1:before {
+    width: 50px;
+    height: 50px;
+    top: -25px;
+    left: 10px;
+}
+
+.cloud1:after {
+    width: 60px;
+    height: 20px;
+    top: -10px;
+    right: 10px;
+}
+
+.cloud2 {
+    width: 80px;
+    height: 30px;
+    top: 15%;
+    right: 20%;
+    animation-delay: -5s;
+}
+
+.cloud2:before {
+    width: 40px;
+    height: 40px;
+    top: -20px;
+    left: 15px;
+}
+
+.cloud2:after {
+    width: 50px;
+    height: 15px;
+    top: -5px;
+    right: 15px;
+}
+
+.cloud3 {
+    width: 120px;
+    height: 50px;
+    top: 25%;
+    left: 60%;
+    animation-delay: -10s;
+}
+
+.cloud3:before {
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    left: 20px;
+}
+
+.cloud3:after {
+    width: 70px;
+    height: 25px;
+    top: -15px;
+    right: 20px;
+}
+
+.cloud4 {
+    width: 90px;
+    height: 35px;
+    top: 35%;
+    left: 15%;
+    animation-delay: -15s;
+}
+
+.cloud4:before {
+    width: 45px;
+    height: 45px;
+    top: -22px;
+    left: 12px;
+}
+
+.cloud4:after {
+    width: 55px;
+    height: 18px;
+    top: -8px;
+    right: 12px;
+}
+
+.cloud5 {
+    width: 110px;
+    height: 45px;
+    top: 30%;
+    right: 10%;
+    animation-delay: -7s;
+}
+
+.cloud5:before {
+    width: 55px;
+    height: 55px;
+    top: -27px;
+    left: 18px;
+}
+
+.cloud5:after {
+    width: 65px;
+    height: 22px;
+    top: -12px;
+    right: 18px;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-10px) translateX(5px);
+    }
+    50% {
+        transform: translateY(-5px) translateX(-5px);
+    }
+    75% {
+        transform: translateY(-15px) translateX(3px);
+    }
+}
+
+/* Hot Air Balloon */
+.hot-air-balloon {
+    position: absolute;
+    top: 40%;
+    right: 15%;
+    animation: balloonFloat 25s ease-in-out infinite;
+}
+
+.balloon {
+    width: 80px;
+    height: 100px;
+    background: linear-gradient(
+        45deg,
+        #FF69B4 0%,
+        #FFB6C1 25%,
+        #FFC0CB 50%,
+        #FFCCCB 75%,
+        #FFE4E1 100%
+    );
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.basket {
+    width: 20px;
+    height: 15px;
+    background: #8B4513;
+    margin: 0 auto;
+    margin-top: 20px;
+    border-radius: 0 0 5px 5px;
+    position: relative;
+}
+
+.rope {
+    position: absolute;
+    width: 1px;
+    height: 20px;
+    background: #654321;
+    top: 100px;
+}
+
+.rope1 { left: 20px; }
+.rope2 { left: 30px; }
+.rope3 { right: 30px; }
+.rope4 { right: 20px; }
+
+@keyframes balloonFloat {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-20px) translateX(-10px);
+    }
+    50% {
+        transform: translateY(-10px) translateX(10px);
+    }
+    75% {
+        transform: translateY(-25px) translateX(-5px);
+    }
+}
+
+/* Center Content */
+.center-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.great-day-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.great-day-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.great-day-btn:active {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Celebration Animation */
+@keyframes celebrate {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.celebrating {
+    animation: celebrate 0.6s ease-in-out;
+}
+
+/* Sparkle Effect */
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #FFD700;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkleAnimation 1s ease-out forwards;
+}
+
+@keyframes sparkleAnimation {
+    0% {
+        opacity: 1;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0) translateY(-50px);
+    }
+}
